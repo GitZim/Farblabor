@@ -1,11 +1,13 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
-// Project pages are served from https://<user>.github.io/<repo>/, so the
-// production build needs that subpath as base. Dev keeps the root path.
+// Relative base so the build works both at the project-page subpath
+// (https://gitzim.github.io/Farblabor/) and at the custom domain root
+// (https://farblabor.heidrich.ws/). HashRouter means no deep-path routing,
+// so relative asset URLs resolve correctly in either mount point.
 export default defineConfig(function (_a) {
     var command = _a.command;
     return ({
-        base: command === 'build' ? '/Farblabor/' : '/',
+        base: command === 'build' ? './' : '/',
         plugins: [react()],
     });
 });
