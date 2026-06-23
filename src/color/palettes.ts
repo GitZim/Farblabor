@@ -1,5 +1,6 @@
 import type { Palette } from './types'
 import { ATTRIBUTES, semanticTricolors } from './generators'
+import { CLINICAL_PALETTES } from './clinical'
 
 /**
  * Curated tricolor palettes. Each `colors` tuple is ordered
@@ -180,7 +181,15 @@ const semanticGroup: PaletteGroup = {
   }),
 }
 
-export const PALETTE_GROUPS: PaletteGroup[] = [...BASE_GROUPS, semanticGroup]
+/** Klinik & Therapie — research-derived medical-context palettes. */
+const clinicalGroup: PaletteGroup = {
+  id: 'klinik',
+  title: 'Klinik & Therapie',
+  blurb: 'Farbkombinationen aus dem medizinischen Sektor — Details auf der Forschung-Seite.',
+  palettes: CLINICAL_PALETTES.map((p) => ({ name: p.name, model: p.model, colors: p.colors })),
+}
+
+export const PALETTE_GROUPS: PaletteGroup[] = [...BASE_GROUPS, semanticGroup, clinicalGroup]
 
 /** Default palette the app starts with (the on-brand ocean blues). */
 export const DEFAULT_PALETTE: Palette = {

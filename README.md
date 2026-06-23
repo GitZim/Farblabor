@@ -17,10 +17,10 @@ verschachtelten Elementen, die drei Farb-Rollen tragen:
     Elementfarbe (alles in OKLCH, gamut-sicher), in zwei Gruppen:
     - *Charakter* (absolut, Farbton bleibt): Pastell, Kräftig, Gedämpft, Tief, Blass.
     - *Feinjustierung* (relativ, wiederholbar): Heller, Dunkler, Sättigung +/−, Wärmer, Kühler.
-- **Paletten** — 92 kuratierte Tricolor-Paletten in 11 Kategorien (Harmonisch, Modern 2026,
+- **Paletten** — 100 kuratierte Tricolor-Paletten in 12 Kategorien (Harmonisch, Modern 2026,
   Ozean & Küste, Natur & Erde, Jahreszeiten, Vintage & Retro, Stimmungen, Branchen & Brand,
-  Pastell & Soft, Bold & Dark, Farbpsychologie) mit Kategorie-Filterleiste, per Klick aufs Logo
-  übertragbar, Favoriten lokal speicherbar.
+  Pastell & Soft, Bold & Dark, Farbpsychologie, Klinik & Therapie) mit Kategorie-Filterleiste, per
+  Klick aufs Logo übertragbar, Favoriten lokal speicherbar.
 - **Generator** — fünf Paletten-Modelle (umschaltbar):
   - **Harmonie** — geometrische Farbkreis-Beziehungen aus Rolle + Basisfarbe (OKLCH, 60-30-10).
   - **Foto-Extraktion** — dominante Farben aus einem Bild per Median-Cut, vollständig
@@ -34,10 +34,15 @@ verschachtelten Elementen, die drei Farb-Rollen tragen:
     Neutral + Pop, Warm–Kalt, Drift (OKLCH-Random-Walk), Hochkey, Tiefkey, Jewel, Erdig, Clash,
     Sorbet, Gedeckt, Cyber, Vaporwave, Duoton, Metallic. Mit Charakter-Filter (Gedämpft/Kräftig/
     Pastell/Tief — dann harmoniebasiert) und „Anker behalten" (nur Verbindung/Akzent neu würfeln).
-  - Verlauf, Kontrast & Zufall in [generators.ts](src/color/generators.ts). Die
-    Farbpsychologie-Presets leben als Paletten-Kategorie (siehe oben), nicht im Generator.
+  - Verlauf, Kontrast & Zufall in [generators.ts](src/color/generators.ts). Farbpsychologie- und
+    Klinik-Presets leben als Paletten-Kategorien (siehe oben), nicht im Generator.
 - **Theorie** — die sechs Harmonie-Modelle mit Farbkreis-Visualisierung, 60-30-10-Prinzip,
   OKLCH und Trends 2026.
+- **Forschung** — Übersicht zu Farbwirkung in Psychiatrie & Medizin ([ResearchPage.tsx](src/pages/ResearchPage.tsx)):
+  evidenzbasiertes Healthcare-Design (Ulrich), Farbwirkungs-Tabelle, klinische Konventionen
+  (OP-Grün, Wegeleitung, Geriatrie), anwendbare Beispiel-Paletten und Quellen — bewusst als
+  Gestaltungswissen eingeordnet (Chromotherapie als nicht evidenzbasiert markiert), nicht als
+  Therapie.
 
 ## Entwicklung
 

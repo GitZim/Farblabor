@@ -5,12 +5,14 @@ import EditorPage from './pages/EditorPage'
 import PalettesPage from './pages/PalettesPage'
 import GeneratorPage from './pages/GeneratorPage'
 import TheoryPage from './pages/TheoryPage'
+import ResearchPage from './pages/ResearchPage'
 
 const NAV = [
   { to: '/', label: 'Editor', end: true },
   { to: '/paletten', label: 'Paletten', end: false },
   { to: '/generator', label: 'Generator', end: false },
   { to: '/theorie', label: 'Theorie', end: false },
+  { to: '/forschung', label: 'Forschung', end: false },
 ]
 
 export default function App() {
@@ -51,6 +53,7 @@ export default function App() {
           <Route path="/paletten" element={<PalettesPage />} />
           <Route path="/generator" element={<GeneratorPage />} />
           <Route path="/theorie" element={<TheoryPage />} />
+          <Route path="/forschung" element={<ResearchPage />} />
         </Routes>
       </main>
 
