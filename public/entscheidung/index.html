@@ -406,6 +406,10 @@
   .verdict button:hover { border-color: #B9C3C7; }
   .verdict button.ja[aria-pressed="true"] { background: var(--petrol-b); border-color: var(--petrol-b); color: #FFFFFF; }
   .verdict button.nein[aria-pressed="true"] { background: #F6E9E4; border-color: #E2C1B3; color: #9A4B33; }
+  /* „Nein“: Vorschau tritt zurück, Buttons bleiben scharf und bedienbar */
+  .decide-card .duo, .decide-card .cand-title { transition: filter 0.35s ease, opacity 0.35s ease; }
+  .decide-card.is-nein .duo { filter: blur(3px) grayscale(0.7); opacity: 0.5; }
+  .decide-card.is-nein .cand-title { opacity: 0.5; }
   .decide-foot {
     display: flex; align-items: center; justify-content: space-between; gap: 14px;
     flex-wrap: wrap; margin-top: 16px;
@@ -1064,10 +1068,12 @@
     function persist() { try { localStorage.setItem(STORE, JSON.stringify(saved)); } catch (e) {} }
     document.querySelectorAll(".verdict").forEach(function (group) {
       var key = group.getAttribute("data-cv");
+      var card = group.closest(".decide-card");
       function render(val) {
         group.querySelectorAll("button").forEach(function (b) {
           b.setAttribute("aria-pressed", String(b.getAttribute("data-val") === val));
         });
+        if (card) card.classList.toggle("is-nein", val === "nein");
       }
       if (saved[key]) render(saved[key]);
       group.querySelectorAll("button").forEach(function (b) {
@@ -1085,6 +1091,9 @@
       saved = {}; persist();
       document.querySelectorAll(".verdict button").forEach(function (b) {
         b.setAttribute("aria-pressed", "false");
+      });
+      document.querySelectorAll(".decide-card.is-nein").forEach(function (c) {
+        c.classList.remove("is-nein");
       });
     });
 
