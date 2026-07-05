@@ -390,54 +390,33 @@
   .pips i { width: 8px; height: 8px; border-radius: 50%; background: var(--petrol-b); }
   .pips i.off { background: transparent; box-shadow: inset 0 0 0 1.5px #C3CCD0; }
 
-  /* ---------- Tendenz ---------- */
-  .tend-scroll { overflow-x: auto; border: 1px solid var(--line); border-radius: var(--radius); background: #FFFFFF; }
-  table.tend { border-collapse: collapse; width: 100%; min-width: 640px; font-size: 14px; }
-  .tend th, .tend td { padding: 14px 18px; text-align: left; vertical-align: middle; }
-  .tend thead th { border-bottom: 2px solid var(--ink); color: var(--ink); font-size: 13.5px; }
-  .tend thead .trio { display: inline-flex; gap: 3px; margin-right: 8px; vertical-align: middle; }
-  .tend thead .trio i { width: 8px; height: 15px; border-radius: 3px; box-shadow: inset 0 0 0 1px rgba(20, 40, 46, 0.1); }
-  .tend tbody tr + tr th, .tend tbody tr + tr td { border-top: 1px solid var(--line); }
-  .tend tbody th { font-weight: 700; color: var(--ink); font-size: 14px; width: 168px; }
-  .tend tbody th small { display: block; font-weight: 400; color: var(--slate); font-size: 11.5px; }
-  .chip {
-    display: inline-flex; align-items: center; border-radius: 999px;
-    padding: 4px 14px; font-size: 12.5px; font-weight: 600;
-  }
-  .chip.ja { background: var(--petrol-b); color: #FFFFFF; }
-  .chip.nein { background: #F6E9E4; color: #9A4B33; }
-  .chip.neutral { background: var(--ground); color: var(--slate); }
-  .choice { display: inline-flex; gap: 4px; }
-  .choice button {
-    border: 1px solid var(--line); background: #FFFFFF; color: var(--slate);
-    border-radius: 999px; padding: 4px 12px; font-size: 12px; font-weight: 600;
-    transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
-  }
-  .choice button:hover { border-color: #B9C3C7; }
-  .choice button.ja[aria-pressed="true"] { background: var(--petrol-b); border-color: var(--petrol-b); color: #FFFFFF; }
-  .choice button.nein[aria-pressed="true"] { background: #F6E9E4; border-color: #E2C1B3; color: #9A4B33; }
-  .choice button.neutral[aria-pressed="true"] { background: var(--ground); border-color: #C6CFD2; color: var(--ink); }
-
-  /* Verdeckte Zeilen (Julia, Tim) — bis zum Aufdecken maskiert */
-  .veil-row:not(.revealed) { cursor: pointer; }
-  .veil-row:not(.revealed):hover th, .veil-row:not(.revealed):hover td { background: #FAFBFB; }
-  .reveal {
-    display: inline-flex; flex-direction: column; gap: 3px; align-items: flex-start;
-    border: 0; background: transparent; padding: 0; margin: 0; font: inherit;
-    color: var(--ink); cursor: pointer; text-align: left;
-  }
-  .rv-name { display: inline-flex; align-items: center; gap: 7px; font-weight: 700; font-size: 14px; }
-  .rv-eye { width: 14px; height: 14px; color: var(--slate); flex: none; }
-  .rv-hint { font-size: 11px; font-weight: 600; color: var(--slate); }
-  .veil-row:not(.revealed) .rv-hide, .veil-row.revealed .rv-show { display: none; }
-  .veil-dot {
+  /* ---------- Entscheidungsbogen ---------- */
+  .decide { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  @media (max-width: 860px) { .decide { grid-template-columns: 1fr; } }
+  .decide-card { padding: 20px; display: flex; flex-direction: column; gap: 16px; }
+  .decide-card .cand-title { display: flex; align-items: baseline; gap: 10px; }
+  .decide-card .cand-title h3 { font-size: 17px; }
+  .verdict { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: auto; }
+  .verdict button {
     display: inline-flex; align-items: center; justify-content: center;
-    min-width: 58px; border-radius: 999px; padding: 4px 16px;
-    font-size: 13px; font-weight: 700; letter-spacing: 0.16em;
-    background: var(--ground); color: #B2BBC0; user-select: none;
+    border: 1px solid var(--line); background: #FFFFFF; color: var(--slate);
+    border-radius: 12px; padding: 12px 14px; font-size: 15px; font-weight: 700;
+    cursor: pointer; transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
   }
-  .veil-row.revealed .veil-dot { display: none; }
-  .veil-row:not(.revealed) .chip { display: none; }
+  .verdict button:hover { border-color: #B9C3C7; }
+  .verdict button.ja[aria-pressed="true"] { background: var(--petrol-b); border-color: var(--petrol-b); color: #FFFFFF; }
+  .verdict button.nein[aria-pressed="true"] { background: #F6E9E4; border-color: #E2C1B3; color: #9A4B33; }
+  .decide-foot {
+    display: flex; align-items: center; justify-content: space-between; gap: 14px;
+    flex-wrap: wrap; margin-top: 16px;
+  }
+  .decide-hint { font-size: 12.5px; color: var(--slate); }
+  .decide-reset {
+    border: 1px solid var(--line); background: #FFFFFF; color: var(--slate);
+    border-radius: 999px; padding: 7px 16px; font-size: 13px; font-weight: 600;
+    cursor: pointer; transition: border-color 0.15s ease, color 0.15s ease;
+  }
+  .decide-reset:hover { border-color: #B9C3C7; color: var(--ink); }
 
   footer.end { padding: 34px 0 46px; font-size: 12.5px; color: var(--slate); display: flex; gap: 8px; flex-wrap: wrap; }
 
@@ -466,7 +445,7 @@
   <section class="hero wrap">
     <p class="eyebrow">Entscheidungsvorlage · 3 finale Entwürfe</p>
     <h1>Drei Wege, Haltung eine Farbe zu geben.</h1>
-    <p class="lede">Die Markenrichtung des AZP-Erfurt — Ambulantes Zentrum für Sozialpsychiatrie — ist gesetzt: <strong>Petrol und Violett in Pastell</strong>, modern und frisch, dabei ruhig genug für den sensiblen Kontext. Offen ist die Farbe des inneren Kerns. Dieses Briefing stellt die drei Entwürfe gleichwertig nebeneinander; am Ende steht die Tendenz des Teams.</p>
+    <p class="lede">Die Markenrichtung des AZP-Erfurt — Ambulantes Zentrum für Sozialpsychiatrie — ist gesetzt: <strong>Petrol und Violett in Pastell</strong>, modern und frisch, dabei ruhig genug für den sensiblen Kontext. Offen ist die Farbe des inneren Kerns. Dieses Briefing stellt die drei Entwürfe gleichwertig nebeneinander; am Ende trägt jede und jeder das eigene Votum ein.</p>
     <p class="methodik">Methodik der Exploration: <b>18 Kern-Töne</b> → <b>6 Petrol-Varianten</b> → <b>6 Kompositionen</b> → <b>3 Finalisten</b></p>
 
     <div class="stage-grid">
@@ -969,73 +948,50 @@
     </div>
   </section>
 
-  <section class="block wrap" id="tendenz" style="padding-bottom: 40px;">
+  <section class="block wrap" id="entscheidung" style="padding-bottom: 40px;">
     <div class="sec-head">
-      <p class="eyebrow">Tendenz</p>
-      <h2>Tendenz des Gründerteams</h2>
-      <p>Julia und Tim haben ihre Einschätzung je Entwurf bereits abgegeben — ihre Ergebnisse sind zunächst verdeckt, damit Anne unvoreingenommen eintragen kann. Zum Aufdecken auf die jeweilige Zeile klicken. Annes Zeile ist offen; die Auswahl wird lokal im Browser gespeichert.</p>
+      <p class="eyebrow">Entscheidungsbogen</p>
+      <h2>Dein Votum je Entwurf</h2>
+      <p>Alle drei Entwürfe noch einmal auf Hell und Dunkel. Vergib für jeden ein <strong>Ja</strong> oder <strong>Nein</strong> — für dich allein. Anschließend teilst du deine Entscheidung in der Gruppe.</p>
     </div>
-    <div class="tend-scroll">
-      <table class="tend">
-        <thead>
-          <tr>
-            <th scope="col">Gründer:in</th>
-            <th scope="col"><span class="trio" aria-hidden="true"><i style="background:#22807B"></i><i style="background:#CFC4FF"></i><i style="background:#F0CE5E"></i></span>A — Gelb-Kern</th>
-            <th scope="col"><span class="trio" aria-hidden="true"><i style="background:#22807B"></i><i style="background:#CFC4FF"></i><i style="background:#F5BC8E"></i></span>B — Apricot-Kern</th>
-            <th scope="col"><span class="trio" aria-hidden="true"><i style="background:#165D5C"></i><i style="background:#4A9C95"></i><i style="background:#CFC4FF"></i></span>C — Flieder-Kern</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr class="veil-row">
-            <th scope="row">
-              <button type="button" class="reveal" aria-expanded="false">
-                <span class="rv-name"><svg class="rv-eye" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"></path><circle cx="12" cy="12" r="3"></circle></svg>Julia</span>
-                <span class="rv-hint rv-show">Zum Anzeigen klicken</span>
-                <span class="rv-hint rv-hide">Verbergen</span>
-              </button>
-            </th>
-            <td><span class="veil-dot" aria-hidden="true">•••</span><span class="chip ja">Ja</span></td>
-            <td><span class="veil-dot" aria-hidden="true">•••</span><span class="chip ja">Ja</span></td>
-            <td><span class="veil-dot" aria-hidden="true">•••</span><span class="chip nein">Nein</span></td>
-          </tr>
-          <tr class="veil-row">
-            <th scope="row">
-              <button type="button" class="reveal" aria-expanded="false">
-                <span class="rv-name"><svg class="rv-eye" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"></path><circle cx="12" cy="12" r="3"></circle></svg>Tim</span>
-                <span class="rv-hint rv-show">Zum Anzeigen klicken</span>
-                <span class="rv-hint rv-hide">Verbergen</span>
-              </button>
-            </th>
-            <td><span class="veil-dot" aria-hidden="true">•••</span><span class="chip neutral">Neutral</span></td>
-            <td><span class="veil-dot" aria-hidden="true">•••</span><span class="chip ja">Ja</span></td>
-            <td><span class="veil-dot" aria-hidden="true">•••</span><span class="chip neutral">Neutral</span></td>
-          </tr>
-          <tr>
-            <th scope="row">Anne <small>noch offen</small></th>
-            <td>
-              <div class="choice" data-cv="a" role="group" aria-label="Annes Einschätzung zu Entwurf A — Gelb-Kern">
-                <button type="button" class="ja" data-val="ja" aria-pressed="false">Ja</button>
-                <button type="button" class="nein" data-val="nein" aria-pressed="false">Nein</button>
-                <button type="button" class="neutral" data-val="neutral" aria-pressed="false">Neutral</button>
-              </div>
-            </td>
-            <td>
-              <div class="choice" data-cv="b" role="group" aria-label="Annes Einschätzung zu Entwurf B — Apricot-Kern">
-                <button type="button" class="ja" data-val="ja" aria-pressed="false">Ja</button>
-                <button type="button" class="nein" data-val="nein" aria-pressed="false">Nein</button>
-                <button type="button" class="neutral" data-val="neutral" aria-pressed="false">Neutral</button>
-              </div>
-            </td>
-            <td>
-              <div class="choice" data-cv="c" role="group" aria-label="Annes Einschätzung zu Entwurf C — Flieder-Kern">
-                <button type="button" class="ja" data-val="ja" aria-pressed="false">Ja</button>
-                <button type="button" class="nein" data-val="nein" aria-pressed="false">Nein</button>
-                <button type="button" class="neutral" data-val="neutral" aria-pressed="false">Neutral</button>
-              </div>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+    <div class="decide">
+      <div class="card decide-card">
+        <div class="cand-title"><h3>A — Gelb-Kern</h3><span class="code">#22807B · #CFC4FF · #F0CE5E</span></div>
+        <div class="duo">
+          <div class="tile light"><svg class="mark" viewBox="0 0 720 720" style="--r:#22807B; --m:#CFC4FF; --a:#F0CE5E" role="img" aria-label="Entwurf A auf hellem Grund"><use href="#azp-mark"></use></svg></div>
+          <div class="tile dark"><svg class="mark" viewBox="0 0 720 720" style="--r:#22807B; --m:#CFC4FF; --a:#F0CE5E" role="img" aria-label="Entwurf A auf dunklem Grund"><use href="#azp-mark"></use></svg></div>
+        </div>
+        <div class="verdict" data-cv="a" role="group" aria-label="Dein Votum zu Entwurf A — Gelb-Kern">
+          <button type="button" class="ja" data-val="ja" aria-pressed="false">Ja</button>
+          <button type="button" class="nein" data-val="nein" aria-pressed="false">Nein</button>
+        </div>
+      </div>
+      <div class="card decide-card">
+        <div class="cand-title"><h3>B — Apricot-Kern</h3><span class="code">#22807B · #CFC4FF · #F5BC8E</span></div>
+        <div class="duo">
+          <div class="tile light"><svg class="mark" viewBox="0 0 720 720" style="--r:#22807B; --m:#CFC4FF; --a:#F5BC8E" role="img" aria-label="Entwurf B auf hellem Grund"><use href="#azp-mark"></use></svg></div>
+          <div class="tile dark"><svg class="mark" viewBox="0 0 720 720" style="--r:#22807B; --m:#CFC4FF; --a:#F5BC8E" role="img" aria-label="Entwurf B auf dunklem Grund"><use href="#azp-mark"></use></svg></div>
+        </div>
+        <div class="verdict" data-cv="b" role="group" aria-label="Dein Votum zu Entwurf B — Apricot-Kern">
+          <button type="button" class="ja" data-val="ja" aria-pressed="false">Ja</button>
+          <button type="button" class="nein" data-val="nein" aria-pressed="false">Nein</button>
+        </div>
+      </div>
+      <div class="card decide-card">
+        <div class="cand-title"><h3>C — Flieder-Kern</h3><span class="code">#165D5C · #4A9C95 · #CFC4FF</span></div>
+        <div class="duo">
+          <div class="tile light"><svg class="mark" viewBox="0 0 720 720" style="--r:#165D5C; --m:#4A9C95; --a:#CFC4FF" role="img" aria-label="Entwurf C auf hellem Grund"><use href="#azp-mark"></use></svg></div>
+          <div class="tile dark"><svg class="mark" viewBox="0 0 720 720" style="--r:#165D5C; --m:#4A9C95; --a:#CFC4FF" role="img" aria-label="Entwurf C auf dunklem Grund"><use href="#azp-mark"></use></svg></div>
+        </div>
+        <div class="verdict" data-cv="c" role="group" aria-label="Dein Votum zu Entwurf C — Flieder-Kern">
+          <button type="button" class="ja" data-val="ja" aria-pressed="false">Ja</button>
+          <button type="button" class="nein" data-val="nein" aria-pressed="false">Nein</button>
+        </div>
+      </div>
+    </div>
+    <div class="decide-foot">
+      <p class="decide-hint">Nur lokal in deinem Browser gespeichert — es wird nichts übertragen.</p>
+      <button type="button" id="decide-reset" class="decide-reset">Auswahl zurücksetzen</button>
     </div>
   </section>
 </main>
@@ -1101,11 +1057,12 @@
       });
     });
 
-    // Annes offene Tendenz-Zeile: Auswahl je Entwurf, lokal gespeichert
-    var STORE = "azp-tendenz-anne";
+    // Persönlicher Entscheidungsbogen: Ja/Nein je Entwurf, lokal gespeichert.
+    var STORE = "azp-entscheidung";
     var saved = {};
     try { saved = JSON.parse(localStorage.getItem(STORE) || "{}"); } catch (e) {}
-    document.querySelectorAll(".choice").forEach(function (group) {
+    function persist() { try { localStorage.setItem(STORE, JSON.stringify(saved)); } catch (e) {} }
+    document.querySelectorAll(".verdict").forEach(function (group) {
       var key = group.getAttribute("data-cv");
       function render(val) {
         group.querySelectorAll("button").forEach(function (b) {
@@ -1119,25 +1076,15 @@
           if (saved[key] === val) { delete saved[key]; val = null; }
           else { saved[key] = val; }
           render(val);
-          try { localStorage.setItem(STORE, JSON.stringify(saved)); } catch (e) {}
+          persist();
         });
       });
     });
-
-    // Verdeckte Tendenz-Zeilen (Julia, Tim): aufdecken/verbergen.
-    // Startet immer verdeckt — Zustand wird bewusst nicht gespeichert.
-    document.querySelectorAll(".tend .veil-row").forEach(function (row) {
-      var btn = row.querySelector(".reveal");
-      function set(revealed) {
-        row.classList.toggle("revealed", revealed);
-        btn.setAttribute("aria-expanded", String(revealed));
-      }
-      btn.addEventListener("click", function (e) {
-        e.stopPropagation();
-        set(!row.classList.contains("revealed"));
-      });
-      row.addEventListener("click", function () {
-        if (!row.classList.contains("revealed")) set(true);
+    var resetBtn = document.getElementById("decide-reset");
+    if (resetBtn) resetBtn.addEventListener("click", function () {
+      saved = {}; persist();
+      document.querySelectorAll(".verdict button").forEach(function (b) {
+        b.setAttribute("aria-pressed", "false");
       });
     });
 
