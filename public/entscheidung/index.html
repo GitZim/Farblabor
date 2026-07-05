@@ -421,6 +421,28 @@
     cursor: pointer; transition: border-color 0.15s ease, color 0.15s ease;
   }
   .decide-reset:hover { border-color: #B9C3C7; color: var(--ink); }
+  .send { margin-top: 22px; padding: 20px 22px; }
+  .send h3 { font-size: 16px; margin: 0 0 4px; }
+  .send .send-lead { font-size: 13.5px; color: var(--slate); margin-bottom: 14px; }
+  .send-row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+  .send-name {
+    flex: 1 1 220px; min-width: 160px; box-sizing: border-box;
+    border: 1px solid var(--line); border-radius: 10px; padding: 11px 14px;
+    font: inherit; font-size: 15px; color: var(--ink); background: #FFFFFF;
+  }
+  .send-name:focus-visible { outline: 2px solid var(--ui); outline-offset: 1px; }
+  .send-btn {
+    border: 0; background: var(--ink); color: #FFFFFF; border-radius: 10px;
+    padding: 12px 20px; font-size: 15px; font-weight: 700; cursor: pointer;
+    transition: background-color 0.15s ease; flex: none;
+  }
+  .send-btn:hover { background: #0E1E23; }
+  .send-btn:disabled { opacity: 0.5; cursor: default; }
+  .send-status { font-size: 13.5px; font-weight: 600; min-height: 1.2em; }
+  .send-status.ok { color: var(--petrol-b); }
+  .send-status.err { color: #B0432B; }
+  .send-status.warn { color: #9A6B12; }
+  .send-foot { margin-top: 14px; font-size: 13.5px; display: flex; gap: 16px; flex-wrap: wrap; }
 
   footer.end { padding: 34px 0 46px; font-size: 12.5px; color: var(--slate); display: flex; gap: 8px; flex-wrap: wrap; }
 
@@ -994,8 +1016,21 @@
       </div>
     </div>
     <div class="decide-foot">
-      <p class="decide-hint">Nur lokal in deinem Browser gespeichert — es wird nichts übertragen.</p>
+      <p class="decide-hint">Deine Auswahl bleibt in diesem Browser, bis du sie an das Team sendest.</p>
       <button type="button" id="decide-reset" class="decide-reset">Auswahl zurücksetzen</button>
+    </div>
+
+    <div class="card send">
+      <h3>Votum an das Team senden</h3>
+      <p class="send-lead">Trag deinen Namen ein und sende dein Ja/Nein je Entwurf. Alle Stimmen erscheinen gesammelt auf der Ergebnisseite.</p>
+      <div class="send-row">
+        <input id="voter-name" class="send-name" type="text" placeholder="Dein Name" autocomplete="name" maxlength="40" aria-label="Dein Name">
+        <button type="button" id="send-btn" class="send-btn">An das Team senden</button>
+      </div>
+      <p id="send-status" class="send-status" role="status" aria-live="polite"></p>
+      <div class="send-foot">
+        <a href="../ergebnis/">→ Ergebnisse des Teams ansehen</a>
+      </div>
     </div>
   </section>
 </main>
@@ -1017,6 +1052,9 @@
     };
     var current = "a";
     var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    // Google-Apps-Script-Web-App-URL (endet auf /exec). Leer = noch nicht eingerichtet.
+    var RESULTS_ENDPOINT = "https://script.google.com/macros/s/AKfycby1IBXAynxYvnL58zZHs6Ea6FrDSKEsUQazee1PtwYlCvbnBS-u-G_i2wPaClJ3BxEC/exec";
 
     function paintStage() {
       var v = VARIANTS[current];
@@ -1095,6 +1133,40 @@
       document.querySelectorAll(".decide-card.is-nein").forEach(function (c) {
         c.classList.remove("is-nein");
       });
+    });
+
+    // Votum an das Team senden (POST an die Google-Apps-Script-Web-App)
+    var nameInput = document.getElementById("voter-name");
+    var sendBtn = document.getElementById("send-btn");
+    var sendStatus = document.getElementById("send-status");
+    var NAME_STORE = "azp-voter-name";
+    function status(msg, kind) {
+      if (!sendStatus) return;
+      sendStatus.textContent = msg;
+      sendStatus.className = "send-status" + (kind ? " " + kind : "");
+    }
+    if (nameInput) {
+      try { nameInput.value = localStorage.getItem(NAME_STORE) || ""; } catch (e) {}
+      nameInput.addEventListener("input", function () {
+        try { localStorage.setItem(NAME_STORE, nameInput.value); } catch (e) {}
+      });
+    }
+    if (sendBtn) sendBtn.addEventListener("click", function () {
+      var name = (nameInput.value || "").trim();
+      if (!name) { status("Bitte zuerst deinen Namen eintragen.", "warn"); nameInput.focus(); return; }
+      if (!saved.a && !saved.b && !saved.c) { status("Bitte mindestens einen Entwurf mit Ja oder Nein bewerten.", "warn"); return; }
+      if (!RESULTS_ENDPOINT) { status("Die Ergebnis-Übertragung ist noch nicht eingerichtet.", "warn"); return; }
+      var payload = { name: name, a: saved.a || "", b: saved.b || "", c: saved.c || "" };
+      status("Wird gesendet …", "");
+      sendBtn.disabled = true;
+      fetch(RESULTS_ENDPOINT, { method: "POST", body: JSON.stringify(payload) })
+        .then(function (r) { return r.json().catch(function () { return { ok: true }; }); })
+        .then(function (res) {
+          if (res && res.ok === false) throw new Error(res.error || "Serverfehler");
+          status("Gesendet ✓ — danke, " + name + "! Auf der Ergebnisseite sichtbar.", "ok");
+        })
+        .catch(function () { status("Senden fehlgeschlagen. Bitte später erneut versuchen.", "err"); })
+        .finally(function () { sendBtn.disabled = false; });
     });
 
     paintStage();

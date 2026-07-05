@@ -1,0 +1,262 @@
+<title>AZP · Ergebnisse</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  :root {
+    --ink: #14282E; --text: #233239; --slate: #5B6770; --line: #E3E6EA;
+    --ground: #F2F4F4; --card: #FFFFFF; --petrol-b: #22807B; --ui: #16566B;
+    --radius: 16px; --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  }
+  html { background: var(--ground); }
+  body {
+    margin: 0; font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    color: var(--text); font-size: 16px; line-height: 1.6; -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 960px; margin: 0 auto; padding: 0 20px; }
+  h1, h2, h3 { color: var(--ink); text-wrap: balance; line-height: 1.15; margin: 0; }
+  p { margin: 0; }
+  a { color: var(--ui); }
+  button { font: inherit; cursor: pointer; }
+  :focus-visible { outline: 2px solid var(--ui); outline-offset: 2px; border-radius: 4px; }
+  .eyebrow { font-size: 12px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--slate); }
+  .mark { display: block; width: 100%; height: auto; }
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); }
+
+  header.top {
+    background: rgba(255, 255, 255, 0.92); backdrop-filter: blur(6px);
+    border-bottom: 1px solid var(--line); position: sticky; top: 0; z-index: 10;
+  }
+  .top-inner { display: flex; align-items: center; gap: 12px; padding: 12px 0; }
+  .top .logomini { width: 30px; flex: none; }
+  .wordmark { font-size: 17px; font-weight: 700; color: var(--ink); letter-spacing: -0.01em; }
+  .wordmark small { font-weight: 400; color: var(--slate); font-size: 14px; }
+  .top-meta { margin-left: auto; font-size: 12.5px; color: var(--slate); }
+  @media (max-width: 560px) { .top-meta { display: none; } }
+
+  .hero { padding: 44px 0 20px; }
+  .hero h1 { font-size: clamp(27px, 4vw, 38px); font-weight: 700; letter-spacing: -0.02em; margin-top: 6px; }
+  .hero .lede { max-width: 60ch; margin-top: 12px; color: var(--slate); font-size: 15px; }
+
+  .bar { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; margin: 8px 0 26px; }
+  .refresh {
+    border: 1px solid var(--line); background: #FFFFFF; color: var(--ink);
+    border-radius: 999px; padding: 8px 18px; font-size: 14px; font-weight: 600;
+    display: inline-flex; align-items: center; gap: 8px; transition: border-color 0.15s ease;
+  }
+  .refresh:hover { border-color: #B9C3C7; }
+  .refresh:disabled { opacity: 0.55; cursor: default; }
+  .refresh svg { width: 15px; height: 15px; }
+  .updated { font-size: 12.5px; color: var(--slate); }
+  .back { margin-left: auto; font-size: 13.5px; font-weight: 600; }
+
+  .summary { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 22px; }
+  @media (max-width: 620px) { .summary { grid-template-columns: 1fr; } }
+  .sum-card { padding: 16px 18px; display: flex; flex-direction: column; gap: 8px; position: relative; }
+  .sum-card.lead { border-color: var(--petrol-b); box-shadow: 0 0 0 1px var(--petrol-b); }
+  .sum-head { display: flex; align-items: center; gap: 9px; }
+  .sum-head .trio { display: inline-flex; gap: 3px; }
+  .sum-head .trio i { width: 8px; height: 15px; border-radius: 3px; box-shadow: inset 0 0 0 1px rgba(20,40,46,0.1); }
+  .sum-name { font-size: 14.5px; font-weight: 700; color: var(--ink); }
+  .sum-count { font-size: 26px; font-weight: 700; color: var(--ink); letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
+  .sum-count small { font-size: 13px; font-weight: 600; color: var(--slate); letter-spacing: 0; }
+  .lead-tag {
+    position: absolute; top: 14px; right: 16px; font-size: 10.5px; font-weight: 700;
+    letter-spacing: 0.08em; text-transform: uppercase; color: var(--petrol-b);
+  }
+
+  .tbl-scroll { overflow-x: auto; border: 1px solid var(--line); border-radius: var(--radius); background: #FFFFFF; }
+  table.res { border-collapse: collapse; width: 100%; min-width: 560px; font-size: 14px; }
+  .res th, .res td { padding: 13px 18px; text-align: left; vertical-align: middle; }
+  .res thead th { border-bottom: 2px solid var(--ink); color: var(--ink); font-size: 13.5px; }
+  .res thead .trio { display: inline-flex; gap: 3px; margin-right: 8px; vertical-align: middle; }
+  .res thead .trio i { width: 8px; height: 15px; border-radius: 3px; box-shadow: inset 0 0 0 1px rgba(20,40,46,0.1); }
+  .res tbody tr + tr th, .res tbody tr + tr td { border-top: 1px solid var(--line); }
+  .res tbody th { font-weight: 700; color: var(--ink); font-size: 14px; text-align: left; }
+  .res tbody th small { display: block; font-weight: 400; color: var(--slate); font-size: 11px; }
+  .chip { display: inline-flex; align-items: center; border-radius: 999px; padding: 4px 14px; font-size: 12.5px; font-weight: 600; }
+  .chip.ja { background: var(--petrol-b); color: #FFFFFF; }
+  .chip.nein { background: #F6E9E4; color: #9A4B33; }
+  .chip.none { background: var(--ground); color: #9AA4AA; }
+
+  .state { padding: 40px 22px; text-align: center; color: var(--slate); font-size: 15px; }
+  .state.err { color: #B0432B; }
+  .state .retry {
+    display: inline-block; margin-top: 14px; border: 1px solid var(--line);
+    background: #FFFFFF; color: var(--ink); border-radius: 999px; padding: 8px 18px; font-size: 14px; font-weight: 600;
+  }
+  .spin { animation: spin 0.8s linear infinite; transform-origin: center; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  @media (prefers-reduced-motion: reduce) { .spin { animation: none; } * { transition-duration: 0.01ms !important; } }
+
+  footer.end { padding: 30px 0 44px; font-size: 12.5px; color: var(--slate); display: flex; gap: 8px; flex-wrap: wrap; }
+</style>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="azp-mark" viewBox="180 320 720 720">
+    <path fill="var(--r, #165D5C)" d="M557.71,938.46c-37.21-6.11-69.12-18.67-69.31-18.07-.18.58,28.84,13.75,68.01,20.87,49.12,8.93,89.65,3.9,111.77.98,24.72-3.26,45.04-8.21,59.41-12.3-9.51,4.16-23.86,9.92-41.87,15.12-26.01,7.51-45.36,9.74-45.29,10.19.09.53,26.72-.83,58.3-9.38,44.25-11.98,73.88-30.72,72.89-29.95-17.01,13.21-42.87,30.66-77.22,44.13-65.98,25.87-125.57,22.28-125.45,24.06.11,1.57,36.28,3.2,78.65-4.23,43.59-7.65,77.81-22.09,100.54-33.66l20.02-12.29c-17.11,14.19-42.54,32.47-76.37,47.54-15.81,7.04-112.99,48.7-224.57,18.05-119.35-32.79-207.71-139.77-233.71-243.8-61.84-247.47,167.58-470.63,412.22-404.62l19.77,7.21c-14.58-3.63-36.14-8.12-62.66-10.37-28.55-2.42-52.23-1.34-52.25-.62-.02.69,21.93.6,52.76,5.19,17.36,2.59,31.47,5.75,40.87,8.09,0,0,0,0-.01,0-45.43-6.92-82.16-4.36-82.16-4.36-12.28.86-29.23,3.17-49.36,9.57,13.62-2.46,29.98-4.38,48.5-4.49,16.37-.1,31.01,1.23,43.49,3.08-16.81-.75-40.44-.45-68.08,4.52-42.26,7.6-72.18,22.27-72.08,22.57.09.25,21.31-9.12,52.42-12.55,7.59-.84,14.1-1.14,19.06-1.23-20.75,5.56-120.03,34.49-175.03,133.44-10.81,19.44-35.38,69.97-33.41,137.95,3.45,119.11,87.97,191.58,104.6,205.3,62.71,51.74,130.63,62.59,160.73,65.46-8.5.88-21.11,1.55-36.17-.16-26.49-3.02-46.81-11.86-46.94-11.51-.11.33,17.99,7.46,31.88,11.94,28.17,9.08,74.67,18.73,144.2,11.94-30.61,7.82-75.65,15.04-128.18,6.42Z"></path>
+    <path fill="var(--m, #4A9C95)" d="M571.25,870.04c-.09-.03-.32-.07-.32-.13.04-.76,47.77,10.28,92.89-3.96,26.46-8.35,47.01-23.81,46.91-23.99-.06-.11-7.31,4.34-18.01,9.19,0,0-38.24,17.32-77.93,17.78-13.78.16-25.33-1.25-33.66-2.68,31.05.73,62.55-4.97,90.99-17.37,152.6-66.51,146.63-282.86,2.55-355.62-34.67-17.51-75.47-26.08-114.06-20.13-2.63.4,19.96-4.48,30.75-5.07,33.8-1.84,59.32,3.99,59.37,3.66.05-.32-23.24-7.44-52.37-8.48-41.43-1.48-75.6,10.03-98.58,20.53,17.75-12.93,38.84-21.05,59.9-27.15l21.45-4.77c-17.52,1.9-43.46,6.75-72.18,20.08-37.46,17.39-60.73,42.92-61.63,41.89-.91-1.04,19.05-24.8,48.26-44.61,39.74-26.95,80.7-35.84,109.38-39-14.48.08-33.2,1.51-54.39,6.66-21.65,5.26-39.26,12.8-52.31,19.52,28.26-23.34,63.78-37.78,100.11-43.21,88.89-13.28,175.21,30.2,222.6,104.87,57.47,90.55,43.17,206.02-25.78,285.85-54.33,62.9-143.62,89.53-223.93,66.13Z"></path>
+    <path fill="var(--a, #CFC4FF)" d="M716.32,659.39c.04,13.33-1.66,32.5-10.23,53.26-20.49,49.51-69.9,82.77-119.94,90.23-68.88,10.27-143.45-30.09-171.07-98.27-28.41-70.15,7.06-134.69,13.14-145.04.08-.11.13-.21.19-.33.06-.1.11-.21.17-.31-2.37,8.67-4.74,17.35-7.14,26.02-1.29,4.69-18.65,79.15,30.05,131.5,0,0,26.58,28.57,65.96,37.67,18.17,4.2,34.77,2.85,34.77,2.85,6.26-.51,12.7-1.59,19.29-3.37,44-11.82,85.39-52.09,85.36-98.75-.02-27.37-14.31-64.26-43.56-77.51-6.24-2.81-11.96-4.04-16.2-4.61,3.31-.33,7.01-.41,11.02,0,16.63,1.68,28.44,10.63,34.15,15.73-4.2-4.74-10.32-10.3-18.77-14.55-26.37-13.26-53.53-2.73-59.09-.44,3.12-2.03,7.59-4.59,13.24-6.75,18.63-7.08,35.58-4.17,35.6-4.46,0-.29-13.7-4.3-31.72-1.2-30.19,5.18-50.21,26.44-58.17,36.4-4.69,5.85-7.88,11.17-9.89,14.81.99-3.23,2.6-7.69,5.2-12.66,16.15-30.86,48.61-41.48,55.36-43.67,25.37-8.24,47.55-4.37,58.14-1.74-8.59-2.93-23.85-6.89-42.92-5.16-21.78,1.97-37.65,10.36-45.61,15.32,8.12-6.44,26.41-19.07,52.6-21.94,43.15-4.73,74.11,20.5,80.82,26.93,23.74,22.76,38.68,54.65,39.25,90.04Z"></path>
+  </symbol>
+</svg>
+
+<header class="top">
+  <div class="wrap top-inner">
+    <svg class="mark logomini" viewBox="180 320 720 720" style="--r:#14282E; --m:#14282E; --a:#14282E" aria-hidden="true"><use href="#azp-mark"></use></svg>
+    <div class="wordmark">AZP <small>· Ergebnisse</small></div>
+    <div class="top-meta">Logo-Farbstudie · Gründerteam</div>
+  </div>
+</header>
+
+<main>
+  <section class="hero wrap">
+    <p class="eyebrow">Ergebnisse</p>
+    <h1>Ergebnisse des Teams</h1>
+    <p class="lede">Alle gesendeten Voten aus dem Entscheidungsbogen — Ja oder Nein je Entwurf. Bei mehrfachem Senden zählt die jeweils jüngste Stimme.</p>
+  </section>
+
+  <section class="wrap">
+    <div class="bar">
+      <button type="button" id="refresh" class="refresh">
+        <svg id="refresh-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a9 9 0 1 1-2.64-6.36"></path><path d="M21 3v6h-6"></path></svg>
+        Aktualisieren
+      </button>
+      <span class="updated" id="updated"></span>
+      <a class="back" href="../entscheidung/">← Zurück zum Entscheidungsbogen</a>
+    </div>
+
+    <div class="summary" id="summary" hidden></div>
+
+    <div id="result-area">
+      <div class="card"><p class="state" id="state">Lade Ergebnisse …</p></div>
+    </div>
+  </section>
+</main>
+
+<footer class="end wrap">
+  <span>AZP-Erfurt — Ambulantes Zentrum für Sozialpsychiatrie</span>
+  <span>·</span>
+  <span>Logo-Farbstudie, Ergebnisse</span>
+  <span>·</span>
+  <span>Vertraulich, nur für das Gründerteam</span>
+</footer>
+
+<script>
+  (function () {
+    // Google-Apps-Script-Web-App-URL (endet auf /exec). Leer = noch nicht eingerichtet.
+    var RESULTS_ENDPOINT = "https://script.google.com/macros/s/AKfycby1IBXAynxYvnL58zZHs6Ea6FrDSKEsUQazee1PtwYlCvbnBS-u-G_i2wPaClJ3BxEC/exec";
+
+    var CANDS = [
+      { key: "a", name: "A — Gelb-Kern", trio: ["#22807B", "#CFC4FF", "#F0CE5E"] },
+      { key: "b", name: "B — Apricot-Kern", trio: ["#22807B", "#CFC4FF", "#F5BC8E"] },
+      { key: "c", name: "C — Flieder-Kern", trio: ["#165D5C", "#4A9C95", "#CFC4FF"] }
+    ];
+
+    var area = document.getElementById("result-area");
+    var summaryEl = document.getElementById("summary");
+    var stateEl = document.getElementById("state");
+    var refreshBtn = document.getElementById("refresh");
+    var refreshIcon = document.getElementById("refresh-icon");
+    var updatedEl = document.getElementById("updated");
+
+    function esc(s) {
+      return String(s == null ? "" : s).replace(/[&<>"]/g, function (c) {
+        return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c];
+      });
+    }
+    function trioHtml(t) {
+      return '<span class="trio" aria-hidden="true"><i style="background:' + t[0] + '"></i><i style="background:' + t[1] + '"></i><i style="background:' + t[2] + '"></i></span>';
+    }
+    function chip(v) {
+      if (v === "ja") return '<span class="chip ja">Ja</span>';
+      if (v === "nein") return '<span class="chip nein">Nein</span>';
+      return '<span class="chip none">–</span>';
+    }
+    function setState(msg, kind, withRetry) {
+      area.innerHTML = '<div class="card"><p class="state' + (kind ? " " + kind : "") + '">' +
+        esc(msg) + (withRetry ? '<br><button type="button" class="retry" id="retry">Erneut versuchen</button>' : "") +
+        '</p></div>';
+      var rb = document.getElementById("retry");
+      if (rb) rb.addEventListener("click", load);
+      summaryEl.hidden = true;
+    }
+
+    // jüngste Stimme je Person (Name normalisiert), nach Name sortiert
+    function latestPerName(votes) {
+      var byName = {};
+      votes.forEach(function (v) {
+        var raw = (v.name || "").trim();
+        if (!raw) return;
+        var k = raw.toLowerCase();
+        if (!byName[k] || (v.ts || 0) >= (byName[k].ts || 0)) {
+          byName[k] = { name: raw, a: v.a || "", b: v.b || "", c: v.c || "", ts: v.ts || 0 };
+        }
+      });
+      return Object.keys(byName).map(function (k) { return byName[k]; })
+        .sort(function (x, y) { return x.name.localeCompare(y.name, "de"); });
+    }
+
+    function render(people) {
+      if (!people.length) { setState("Noch keine Stimmen eingegangen. Sobald jemand sein Votum sendet, erscheint es hier.", "", false); return; }
+
+      // Zusammenfassung: Ja-Anzahl je Entwurf
+      var counts = CANDS.map(function (c) {
+        return people.filter(function (p) { return p[c.key] === "ja"; }).length;
+      });
+      var maxJa = Math.max.apply(null, counts);
+      summaryEl.innerHTML = CANDS.map(function (c, i) {
+        var lead = counts[i] === maxJa && maxJa > 0;
+        return '<div class="card sum-card' + (lead ? " lead" : "") + '">' +
+          (lead ? '<span class="lead-tag">meiste Ja</span>' : "") +
+          '<div class="sum-head">' + trioHtml(c.trio) + '<span class="sum-name">' + esc(c.name) + '</span></div>' +
+          '<div class="sum-count">' + counts[i] + ' <small>/ ' + people.length + ' Ja</small></div>' +
+        '</div>';
+      }).join("");
+      summaryEl.hidden = false;
+
+      // Tabelle: Zeile je Person
+      var head = '<tr><th scope="col">Name</th>' + CANDS.map(function (c) {
+        return '<th scope="col">' + trioHtml(c.trio) + esc(c.name) + '</th>';
+      }).join("") + '</tr>';
+      var rows = people.map(function (p) {
+        return '<tr><th scope="row">' + esc(p.name) + '</th>' +
+          CANDS.map(function (c) { return '<td>' + chip(p[c.key]) + '</td>'; }).join("") + '</tr>';
+      }).join("");
+      area.innerHTML = '<div class="tbl-scroll"><table class="res"><thead>' + head + '</thead><tbody>' + rows + '</tbody></table></div>';
+    }
+
+    function stamp() {
+      var d = new Date();
+      var hh = ("0" + d.getHours()).slice(-2), mm = ("0" + d.getMinutes()).slice(-2);
+      updatedEl.textContent = "zuletzt geladen um " + hh + ":" + mm + " Uhr";
+    }
+
+    function load() {
+      if (!RESULTS_ENDPOINT) {
+        setState("Die Ergebnis-Übertragung ist noch nicht eingerichtet. Sobald die Verbindung zur Tabelle hinterlegt ist, erscheinen hier alle Stimmen.", "", false);
+        updatedEl.textContent = "";
+        return;
+      }
+      refreshBtn.disabled = true;
+      refreshIcon.classList.add("spin");
+      if (!area.querySelector(".res")) setState("Lade Ergebnisse …", "", false);
+      fetch(RESULTS_ENDPOINT, { method: "GET" })
+        .then(function (r) { return r.json(); })
+        .then(function (data) {
+          var votes = (data && data.votes) || [];
+          render(latestPerName(votes));
+          stamp();
+        })
+        .catch(function () {
+          setState("Ergebnisse konnten nicht geladen werden. Bitte Verbindung prüfen und erneut versuchen.", "err", true);
+        })
+        .finally(function () {
+          refreshBtn.disabled = false;
+          refreshIcon.classList.remove("spin");
+        });
+    }
+
+    refreshBtn.addEventListener("click", load);
+    // für Selbsttests: gerendert wird über window.__renderResults(votes)
+    window.__renderResults = function (votes) { render(latestPerName(votes)); stamp(); };
+    load();
+  })();
+</script>
