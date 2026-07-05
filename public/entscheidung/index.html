@@ -1021,11 +1021,10 @@
     </div>
 
     <div class="card send">
-      <h3>Votum an das Team senden</h3>
-      <p class="send-lead">Trag deinen Namen ein und sende dein Ja/Nein je Entwurf. Alle Stimmen erscheinen gesammelt auf der Ergebnisseite.</p>
+      <h3>Votum anonym senden</h3>
+      <p class="send-lead">Kein Name nötig — die Abstimmung ist anonym. Sende dein Ja/Nein je Entwurf; auf der Ergebnisseite werden die Stimmen anonym zusammengezählt. Erneutes Senden von diesem Gerät aktualisiert deine Stimme.</p>
       <div class="send-row">
-        <input id="voter-name" class="send-name" type="text" placeholder="Dein Name" autocomplete="name" maxlength="40" aria-label="Dein Name">
-        <button type="button" id="send-btn" class="send-btn">An das Team senden</button>
+        <button type="button" id="send-btn" class="send-btn">Anonym an das Team senden</button>
       </div>
       <p id="send-status" class="send-status" role="status" aria-live="polite"></p>
       <div class="send-foot">
@@ -1135,35 +1134,36 @@
       });
     });
 
-    // Votum an das Team senden (POST an die Google-Apps-Script-Web-App)
-    var nameInput = document.getElementById("voter-name");
+    // Votum anonym an das Team senden (POST an die Google-Apps-Script-Web-App)
     var sendBtn = document.getElementById("send-btn");
     var sendStatus = document.getElementById("send-status");
-    var NAME_STORE = "azp-voter-name";
     function status(msg, kind) {
       if (!sendStatus) return;
       sendStatus.textContent = msg;
       sendStatus.className = "send-status" + (kind ? " " + kind : "");
     }
-    if (nameInput) {
-      try { nameInput.value = localStorage.getItem(NAME_STORE) || ""; } catch (e) {}
-      nameInput.addEventListener("input", function () {
-        try { localStorage.setItem(NAME_STORE, nameInput.value); } catch (e) {}
-      });
+    // Stabile anonyme Kennung je Gerät — kein Name, verhindert Doppelzählung, erlaubt Aktualisieren.
+    function voterId() {
+      var k = "azp-voter-id", id = "";
+      try { id = localStorage.getItem(k) || ""; } catch (e) {}
+      if (!id) {
+        id = (window.crypto && crypto.randomUUID) ? crypto.randomUUID()
+          : ("v-" + Date.now().toString(36) + Math.random().toString(36).slice(2, 10));
+        try { localStorage.setItem(k, id); } catch (e) {}
+      }
+      return id;
     }
     if (sendBtn) sendBtn.addEventListener("click", function () {
-      var name = (nameInput.value || "").trim();
-      if (!name) { status("Bitte zuerst deinen Namen eintragen.", "warn"); nameInput.focus(); return; }
       if (!saved.a && !saved.b && !saved.c) { status("Bitte mindestens einen Entwurf mit Ja oder Nein bewerten.", "warn"); return; }
       if (!RESULTS_ENDPOINT) { status("Die Ergebnis-Übertragung ist noch nicht eingerichtet.", "warn"); return; }
-      var payload = { name: name, a: saved.a || "", b: saved.b || "", c: saved.c || "" };
+      var payload = { name: voterId(), a: saved.a || "", b: saved.b || "", c: saved.c || "" };
       status("Wird gesendet …", "");
       sendBtn.disabled = true;
       fetch(RESULTS_ENDPOINT, { method: "POST", body: JSON.stringify(payload) })
         .then(function (r) { return r.json().catch(function () { return { ok: true }; }); })
         .then(function (res) {
           if (res && res.ok === false) throw new Error(res.error || "Serverfehler");
-          status("Gesendet ✓ — danke, " + name + "! Auf der Ergebnisseite sichtbar.", "ok");
+          status("Anonym gesendet ✓ — deine Stimme zählt auf der Ergebnisseite. Erneutes Senden aktualisiert sie.", "ok");
         })
         .catch(function () { status("Senden fehlgeschlagen. Bitte später erneut versuchen.", "err"); })
         .finally(function () { sendBtn.disabled = false; });
