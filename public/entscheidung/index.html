@@ -396,15 +396,16 @@
   .decide-card { padding: 20px; display: flex; flex-direction: column; gap: 16px; }
   .decide-card .cand-title { display: flex; align-items: baseline; gap: 10px; }
   .decide-card .cand-title h3 { font-size: 17px; }
-  .verdict { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: auto; }
+  .verdict { display: grid; grid-template-columns: repeat(3, 1fr); gap: 7px; margin-top: auto; }
   .verdict button {
     display: inline-flex; align-items: center; justify-content: center;
     border: 1px solid var(--line); background: #FFFFFF; color: var(--slate);
-    border-radius: 12px; padding: 12px 14px; font-size: 15px; font-weight: 700;
+    border-radius: 11px; padding: 11px 6px; font-size: 14px; font-weight: 700;
     cursor: pointer; transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
   }
   .verdict button:hover { border-color: #B9C3C7; }
   .verdict button.ja[aria-pressed="true"] { background: var(--petrol-b); border-color: var(--petrol-b); color: #FFFFFF; }
+  .verdict button.neutral[aria-pressed="true"] { background: var(--ground); border-color: #C6CFD2; color: var(--ink); }
   .verdict button.nein[aria-pressed="true"] { background: #F6E9E4; border-color: #E2C1B3; color: #9A4B33; }
   /* „Nein“: Vorschau tritt zurück, Buttons bleiben scharf und bedienbar */
   .decide-card .duo, .decide-card .cand-title { transition: filter 0.35s ease, opacity 0.35s ease; }
@@ -978,7 +979,7 @@
     <div class="sec-head">
       <p class="eyebrow">Entscheidungsbogen</p>
       <h2>Dein Votum je Entwurf</h2>
-      <p>Alle drei Entwürfe noch einmal auf Hell und Dunkel. Vergib für jeden ein <strong>Ja</strong> oder <strong>Nein</strong> — für dich allein. Anschließend teilst du deine Entscheidung in der Gruppe.</p>
+      <p>Alle drei Entwürfe noch einmal auf Hell und Dunkel. Vergib für jeden ein <strong>Ja</strong>, <strong>Neutral</strong> oder <strong>Nein</strong> — für dich allein. Im Ranking zählt Ja 2 Punkte, Neutral 1, Nein 0.</p>
     </div>
     <div class="decide">
       <div class="card decide-card">
@@ -989,6 +990,7 @@
         </div>
         <div class="verdict" data-cv="a" role="group" aria-label="Dein Votum zu Entwurf A — Gelb-Kern">
           <button type="button" class="ja" data-val="ja" aria-pressed="false">Ja</button>
+          <button type="button" class="neutral" data-val="neutral" aria-pressed="false">Neutral</button>
           <button type="button" class="nein" data-val="nein" aria-pressed="false">Nein</button>
         </div>
       </div>
@@ -1000,6 +1002,7 @@
         </div>
         <div class="verdict" data-cv="b" role="group" aria-label="Dein Votum zu Entwurf B — Apricot-Kern">
           <button type="button" class="ja" data-val="ja" aria-pressed="false">Ja</button>
+          <button type="button" class="neutral" data-val="neutral" aria-pressed="false">Neutral</button>
           <button type="button" class="nein" data-val="nein" aria-pressed="false">Nein</button>
         </div>
       </div>
@@ -1011,6 +1014,7 @@
         </div>
         <div class="verdict" data-cv="c" role="group" aria-label="Dein Votum zu Entwurf C — Flieder-Kern">
           <button type="button" class="ja" data-val="ja" aria-pressed="false">Ja</button>
+          <button type="button" class="neutral" data-val="neutral" aria-pressed="false">Neutral</button>
           <button type="button" class="nein" data-val="nein" aria-pressed="false">Nein</button>
         </div>
       </div>
@@ -1022,7 +1026,7 @@
 
     <div class="card send">
       <h3>Votum anonym senden</h3>
-      <p class="send-lead">Kein Name nötig — die Abstimmung ist anonym. Sende dein Ja/Nein je Entwurf; auf der Ergebnisseite werden die Stimmen anonym zusammengezählt. Erneutes Senden von diesem Gerät aktualisiert deine Stimme.</p>
+      <p class="send-lead">Kein Name nötig — die Abstimmung ist anonym. Sende dein Ja, Neutral oder Nein je Entwurf; auf der Ergebnisseite werden die Stimmen anonym nach Punkten gerankt. Erneutes Senden von diesem Gerät aktualisiert deine Stimme.</p>
       <div class="send-row">
         <button type="button" id="send-btn" class="send-btn">Anonym an das Team senden</button>
       </div>

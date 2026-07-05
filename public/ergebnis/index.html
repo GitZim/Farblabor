@@ -75,18 +75,25 @@
   .chip { display: inline-flex; align-items: center; border-radius: 999px; padding: 4px 14px; font-size: 12.5px; font-weight: 600; }
   .chip.ja { background: var(--petrol-b); color: #FFFFFF; }
   .chip.nein { background: #F6E9E4; color: #9A4B33; }
+  .chip.neutral { background: var(--ground); color: var(--slate); }
   .chip.none { background: var(--ground); color: #9AA4AA; }
 
   .total { font-size: 14px; font-weight: 600; color: var(--slate); margin: 0 0 16px; }
   .res td.num { font-variant-numeric: tabular-nums; white-space: nowrap; }
   .res td.muted { color: var(--slate); }
-  .res .barcell { width: 42%; min-width: 120px; }
-  .res .bar { height: 9px; border-radius: 99px; background: var(--ground); overflow: hidden; }
+  .res td.rank { width: 52px; font-size: 18px; font-weight: 700; color: var(--slate); font-variant-numeric: tabular-nums; }
+  .res tbody tr.lead td.rank { color: var(--petrol-b); }
+  .res td.pts { min-width: 104px; }
+  .res .pts-num { font-size: 17px; font-weight: 700; color: var(--ink); font-variant-numeric: tabular-nums; }
+  .res td.pts .bar { margin-top: 5px; }
+  .res .bar { height: 8px; border-radius: 99px; background: var(--ground); overflow: hidden; }
   .res .bar i { display: block; height: 100%; background: var(--petrol-b); border-radius: 99px; }
   .res .lead-tag {
     display: inline-block; margin-left: 8px; font-size: 10px; font-weight: 700;
     letter-spacing: 0.06em; text-transform: uppercase; color: var(--petrol-b); vertical-align: middle;
   }
+  .legend { font-size: 12.5px; color: var(--slate); margin: 12px 2px 0; }
+  .legend b { color: var(--ink); }
 
   .state { padding: 40px 22px; text-align: center; color: var(--slate); font-size: 15px; }
   .state.err { color: #B0432B; }
@@ -121,7 +128,7 @@
   <section class="hero wrap">
     <p class="eyebrow">Ergebnisse</p>
     <h1>Ergebnisse des Teams</h1>
-    <p class="lede">Anonyme Abstimmung: die Anzahl der Ja- und Nein-Stimmen je Entwurf. Kein Name, keine Zuordnung — bei mehrfachem Senden vom selben Gerät zählt die jeweils jüngste Stimme.</p>
+    <p class="lede">Anonyme Abstimmung, gerankt nach Punkten (Ja = 2, Neutral = 1, Nein = 0). Kein Name, keine Zuordnung — bei mehrfachem Senden vom selben Gerät zählt die jeweils jüngste Stimme.</p>
   </section>
 
   <section class="wrap">
@@ -211,25 +218,32 @@
 
       var stats = CANDS.map(function (c) {
         var ja = people.filter(function (p) { return p[c.key] === "ja"; }).length;
+        var neutral = people.filter(function (p) { return p[c.key] === "neutral"; }).length;
         var nein = people.filter(function (p) { return p[c.key] === "nein"; }).length;
-        return { c: c, ja: ja, nein: nein, none: n - ja - nein };
+        return { c: c, ja: ja, neutral: neutral, nein: nein, none: n - ja - neutral - nein, points: 2 * ja + neutral };
       });
-      var maxJa = Math.max.apply(null, stats.map(function (s) { return s.ja; }));
+      stats.sort(function (x, y) { return y.points - x.points; });
+      var maxScore = stats[0].points;
 
-      var rows = stats.map(function (s) {
-        var lead = s.ja === maxJa && maxJa > 0;
-        var pct = Math.round(s.ja / n * 100);
-        return '<tr>' +
-          '<th scope="row">' + trioHtml(s.c.trio) + esc(s.c.name) + (lead ? '<span class="lead-tag">meiste Ja</span>' : '') + '</th>' +
-          '<td class="barcell"><div class="bar"><i style="width:' + pct + '%"></i></div></td>' +
-          '<td class="num"><span class="chip ja">' + s.ja + ' Ja</span></td>' +
-          '<td class="num"><span class="chip nein">' + s.nein + ' Nein</span></td>' +
+      var rows = stats.map(function (s, i) {
+        s.rank = (i > 0 && s.points === stats[i - 1].points) ? stats[i - 1].rank : i + 1;
+        var lead = s.rank === 1 && maxScore > 0;
+        var pct = maxScore > 0 ? Math.round(s.points / maxScore * 100) : 0;
+        return '<tr' + (lead ? ' class="lead"' : '') + '>' +
+          '<td class="rank">' + s.rank + '</td>' +
+          '<th scope="row">' + trioHtml(s.c.trio) + esc(s.c.name) + (lead ? '<span class="lead-tag">Führung</span>' : '') + '</th>' +
+          '<td class="pts"><span class="pts-num">' + s.points + '</span><div class="bar"><i style="width:' + pct + '%"></i></div></td>' +
+          '<td class="num"><span class="chip ja">' + s.ja + '</span></td>' +
+          '<td class="num"><span class="chip neutral">' + s.neutral + '</span></td>' +
+          '<td class="num"><span class="chip nein">' + s.nein + '</span></td>' +
           '<td class="num muted">' + s.none + '</td>' +
         '</tr>';
       }).join("");
       area.innerHTML = '<div class="tbl-scroll"><table class="res"><thead><tr>' +
-        '<th scope="col">Entwurf</th><th scope="col">Zustimmung</th><th scope="col">Ja</th><th scope="col">Nein</th><th scope="col">keine Angabe</th>' +
-        '</tr></thead><tbody>' + rows + '</tbody></table></div>';
+        '<th scope="col">Platz</th><th scope="col">Entwurf</th><th scope="col">Punkte</th>' +
+        '<th scope="col">Ja</th><th scope="col">Neutral</th><th scope="col">Nein</th><th scope="col">k. A.</th>' +
+        '</tr></thead><tbody>' + rows + '</tbody></table></div>' +
+        '<p class="legend">Punkte je Entwurf: <b>Ja = 2</b>, <b>Neutral = 1</b>, <b>Nein = 0</b>. k. A. = keine Angabe (nicht bewertet).</p>';
     }
 
     function stamp() {
