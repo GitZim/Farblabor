@@ -304,14 +304,41 @@
   .dl-note { font-size: 13px; color: var(--slate); margin-top: 14px; max-width: 78ch; }
   .dl-note code { font-family: var(--mono); font-size: 12px; color: var(--ink); background: #FFFFFF; border: 1px solid var(--line); border-radius: 6px; padding: 1px 7px; }
 
-  table.pal { border-collapse: collapse; width: 100%; min-width: 640px; font-size: 13.5px; }
-  .pal th, .pal td { padding: 12px 16px; text-align: left; vertical-align: middle; }
-  .pal thead th { border-bottom: 2px solid var(--ink); color: var(--ink); font-size: 13px; }
-  .pal tbody tr + tr td, .pal tbody tr + tr th { border-top: 1px solid var(--line); }
-  .pal tbody th { font-weight: 700; color: var(--ink); white-space: nowrap; }
-  .pal td { font-family: var(--mono); font-size: 12.5px; color: var(--text); white-space: nowrap; }
-  .pal td.role { font-family: inherit; font-size: 13px; color: var(--slate); }
-  .pal-link { margin-top: 14px; font-size: 14px; font-weight: 600; }
+  /* ---------- Farbcodes ---------- */
+  .crows { display: flex; flex-direction: column; gap: 16px; }
+  .crow {
+    display: grid; grid-template-columns: minmax(220px, 1fr) minmax(0, 1.4fr);
+    background: #FFFFFF; border: 1px solid var(--line); border-radius: var(--radius);
+    overflow: hidden;
+  }
+  @media (max-width: 680px) { .crow { grid-template-columns: 1fr; } }
+  .cswatch {
+    padding: 26px 24px; min-height: 150px; box-sizing: border-box;
+    display: flex; flex-direction: column; justify-content: space-between; gap: 18px;
+  }
+  .cswatch .cname { font-size: 18px; font-weight: 700; letter-spacing: -0.01em; }
+  .cswatch .crole { font-size: 12px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; opacity: 0.75; margin-top: 3px; }
+  .cswatch .chex { font-family: var(--mono); font-size: 24px; font-weight: 700; letter-spacing: 0.02em; }
+  .cswatch.on-dark { color: #FFFFFF; }
+  .cswatch.on-light { color: var(--ink); }
+  .cswatch.bordered { border-right: 1px solid var(--line); }
+  @media (max-width: 680px) { .cswatch.bordered { border-right: 0; border-bottom: 1px solid var(--line); } }
+  .codes { padding: 20px 22px; display: flex; flex-direction: column; gap: 8px; justify-content: center; }
+  .code-row {
+    display: grid; grid-template-columns: 56px 1fr auto; align-items: center; gap: 12px;
+    padding: 7px 0;
+  }
+  .code-row + .code-row { border-top: 1px solid #EFF2F3; }
+  .code-fmt { font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--slate); }
+  .code-val { font-family: var(--mono); font-size: 14px; color: var(--ink); overflow-wrap: anywhere; }
+  .copy {
+    border: 1px solid var(--line); background: #FFFFFF; color: var(--slate);
+    border-radius: 999px; padding: 4px 13px; font-size: 12px; font-weight: 600;
+    transition: border-color 0.15s ease, color 0.15s ease; flex: none;
+  }
+  .copy:hover { border-color: var(--petrol-b); color: var(--ink); }
+  .copy.done { border-color: var(--petrol-b); color: var(--petrol-b); }
+  .color-note { font-size: 12.5px; color: var(--slate); margin-top: 14px; max-width: 72ch; }
 
   footer.end { padding: 34px 0 46px; font-size: 12.5px; color: var(--slate); display: flex; gap: 8px; flex-wrap: wrap; }
 
@@ -615,43 +642,81 @@
     </div>
     <p class="dl-note">Die Dateien sind zusätzlich dauerhaft abrufbar unter <code>farblabor.heidrich.ws/logo/azp-logo.svg</code>, <code>…/azp-logo-schwarz.svg</code>, <code>…/azp-logo-weiss.svg</code> und <code>…/azp-logo-monochrom-petrol.svg</code>.</p>
 
-    <div class="tbl-scroll" style="margin-top: 26px;">
-      <table class="pal">
-        <thead>
-          <tr>
-            <th scope="col">Farbe</th>
-            <th scope="col">Rolle</th>
-            <th scope="col">HEX</th>
-            <th scope="col">RGB</th>
-            <th scope="col">HSL</th>
-            <th scope="col">CMYK</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <th scope="row"><span class="swatch-dot" style="background:#22807B"></span> Helles Petrol</th>
-            <td class="role">Anker · äußerer Ring · ~60 %</td>
-            <td>#22807B</td><td>34 · 128 · 123</td><td>177° · 58 % · 32 %</td><td>73 · 0 · 4 · 50</td>
-          </tr>
-          <tr>
-            <th scope="row"><span class="swatch-dot" style="background:#CFC4FF"></span> Flieder</th>
-            <td class="role">Verbindung · mittlere Spirale · ~30 %</td>
-            <td>#CFC4FF</td><td>207 · 196 · 255</td><td>251° · 100 % · 88 %</td><td>19 · 23 · 0 · 0</td>
-          </tr>
-          <tr>
-            <th scope="row"><span class="swatch-dot" style="background:#F2E27A"></span> Sonnengelb</th>
-            <td class="role">Akzent · innerer Kern · ~10 %</td>
-            <td>#F2E27A</td><td>242 · 226 · 122</td><td>52° · 82 % · 71 %</td><td>0 · 7 · 50 · 5</td>
-          </tr>
-          <tr>
-            <th scope="row"><span class="swatch-dot" style="background:#14282E"></span> Tiefes Petrol</th>
-            <td class="role">Dunkler Grund · Text</td>
-            <td>#14282E</td><td>20 · 40 · 46</td><td>194° · 39 % · 13 %</td><td>57 · 13 · 0 · 82</td>
-          </tr>
-        </tbody>
-      </table>
+  </section>
+
+  <section class="block wrap" id="farben" style="padding-bottom: 40px;">
+    <div class="sec-head">
+      <p class="eyebrow">Farbcodes</p>
+      <h2>Die Farben des AZP-Erfurt</h2>
+      <p>Alle Werte zum Kopieren — HEX für Web und Design-Tools, RGB und HSL für Bildschirm, CMYK für den Druck.</p>
     </div>
-    <p class="pal-link"><a href="../farben/">→ Alle Farbcodes auf einer Seite (zum Kopieren)</a></p>
+    <div class="crows">
+      <div class="crow">
+        <div class="cswatch on-dark" style="background:#22807B">
+          <div><div class="cname">Helles Petrol</div><div class="crole">Anker · äußerer Ring · ~60 %</div></div>
+          <div class="chex">#22807B</div>
+        </div>
+        <div class="codes">
+          <div class="code-row"><span class="code-fmt">HEX</span><span class="code-val">#22807B</span><button type="button" class="copy" data-copy="#22807B">Kopieren</button></div>
+          <div class="code-row"><span class="code-fmt">RGB</span><span class="code-val">rgb(34, 128, 123)</span><button type="button" class="copy" data-copy="rgb(34, 128, 123)">Kopieren</button></div>
+          <div class="code-row"><span class="code-fmt">HSL</span><span class="code-val">hsl(177, 58%, 32%)</span><button type="button" class="copy" data-copy="hsl(177, 58%, 32%)">Kopieren</button></div>
+          <div class="code-row"><span class="code-fmt">CMYK</span><span class="code-val">73 / 0 / 4 / 50</span><button type="button" class="copy" data-copy="cmyk(73%, 0%, 4%, 50%)">Kopieren</button></div>
+        </div>
+      </div>
+
+      <div class="crow">
+        <div class="cswatch on-light" style="background:#CFC4FF">
+          <div><div class="cname">Flieder</div><div class="crole">Verbindung · mittlere Spirale · ~30 %</div></div>
+          <div class="chex">#CFC4FF</div>
+        </div>
+        <div class="codes">
+          <div class="code-row"><span class="code-fmt">HEX</span><span class="code-val">#CFC4FF</span><button type="button" class="copy" data-copy="#CFC4FF">Kopieren</button></div>
+          <div class="code-row"><span class="code-fmt">RGB</span><span class="code-val">rgb(207, 196, 255)</span><button type="button" class="copy" data-copy="rgb(207, 196, 255)">Kopieren</button></div>
+          <div class="code-row"><span class="code-fmt">HSL</span><span class="code-val">hsl(251, 100%, 88%)</span><button type="button" class="copy" data-copy="hsl(251, 100%, 88%)">Kopieren</button></div>
+          <div class="code-row"><span class="code-fmt">CMYK</span><span class="code-val">19 / 23 / 0 / 0</span><button type="button" class="copy" data-copy="cmyk(19%, 23%, 0%, 0%)">Kopieren</button></div>
+        </div>
+      </div>
+
+      <div class="crow">
+        <div class="cswatch on-light" style="background:#F2E27A">
+          <div><div class="cname">Sonnengelb</div><div class="crole">Akzent · innerer Kern · ~10 %</div></div>
+          <div class="chex">#F2E27A</div>
+        </div>
+        <div class="codes">
+          <div class="code-row"><span class="code-fmt">HEX</span><span class="code-val">#F2E27A</span><button type="button" class="copy" data-copy="#F2E27A">Kopieren</button></div>
+          <div class="code-row"><span class="code-fmt">RGB</span><span class="code-val">rgb(242, 226, 122)</span><button type="button" class="copy" data-copy="rgb(242, 226, 122)">Kopieren</button></div>
+          <div class="code-row"><span class="code-fmt">HSL</span><span class="code-val">hsl(52, 82%, 71%)</span><button type="button" class="copy" data-copy="hsl(52, 82%, 71%)">Kopieren</button></div>
+          <div class="code-row"><span class="code-fmt">CMYK</span><span class="code-val">0 / 7 / 50 / 5</span><button type="button" class="copy" data-copy="cmyk(0%, 7%, 50%, 5%)">Kopieren</button></div>
+        </div>
+      </div>
+
+      <div class="crow">
+        <div class="cswatch on-dark" style="background:#14282E">
+          <div><div class="cname">Tiefes Petrol</div><div class="crole">Dunkler Grund · Text</div></div>
+          <div class="chex">#14282E</div>
+        </div>
+        <div class="codes">
+          <div class="code-row"><span class="code-fmt">HEX</span><span class="code-val">#14282E</span><button type="button" class="copy" data-copy="#14282E">Kopieren</button></div>
+          <div class="code-row"><span class="code-fmt">RGB</span><span class="code-val">rgb(20, 40, 46)</span><button type="button" class="copy" data-copy="rgb(20, 40, 46)">Kopieren</button></div>
+          <div class="code-row"><span class="code-fmt">HSL</span><span class="code-val">hsl(194, 39%, 13%)</span><button type="button" class="copy" data-copy="hsl(194, 39%, 13%)">Kopieren</button></div>
+          <div class="code-row"><span class="code-fmt">CMYK</span><span class="code-val">57 / 13 / 0 / 82</span><button type="button" class="copy" data-copy="cmyk(57%, 13%, 0%, 82%)">Kopieren</button></div>
+        </div>
+      </div>
+
+      <div class="crow">
+        <div class="cswatch on-light bordered" style="background:#FFFFFF">
+          <div><div class="cname">Weiß</div><div class="crole">Heller Grund</div></div>
+          <div class="chex">#FFFFFF</div>
+        </div>
+        <div class="codes">
+          <div class="code-row"><span class="code-fmt">HEX</span><span class="code-val">#FFFFFF</span><button type="button" class="copy" data-copy="#FFFFFF">Kopieren</button></div>
+          <div class="code-row"><span class="code-fmt">RGB</span><span class="code-val">rgb(255, 255, 255)</span><button type="button" class="copy" data-copy="rgb(255, 255, 255)">Kopieren</button></div>
+          <div class="code-row"><span class="code-fmt">HSL</span><span class="code-val">hsl(0, 0%, 100%)</span><button type="button" class="copy" data-copy="hsl(0, 0%, 100%)">Kopieren</button></div>
+          <div class="code-row"><span class="code-fmt">CMYK</span><span class="code-val">0 / 0 / 0 / 0</span><button type="button" class="copy" data-copy="cmyk(0%, 0%, 0%, 0%)">Kopieren</button></div>
+        </div>
+      </div>
+    </div>
+    <p class="color-note">CMYK-Werte sind rechnerisch aus RGB abgeleitet — für farbverbindlichen Druck bitte mit einem Proof abstimmen. Auch als eigene Seite: <a href="../farben/">farblabor.heidrich.ws/farben</a>.</p>
   </section>
 </main>
 
@@ -690,6 +755,29 @@
         a.href = url; a.download = f.name;
         document.body.appendChild(a); a.click(); a.remove();
         setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
+      });
+    });
+
+    // Farbcodes: Wert in die Zwischenablage kopieren
+    function fallbackCopy(text) {
+      var ta = document.createElement("textarea");
+      ta.value = text; ta.setAttribute("readonly", "");
+      ta.style.position = "fixed"; ta.style.left = "-9999px";
+      document.body.appendChild(ta); ta.select();
+      try { document.execCommand("copy"); } catch (e) {}
+      ta.remove();
+    }
+    document.querySelectorAll(".copy").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        var text = btn.getAttribute("data-copy");
+        var done = function () {
+          var old = btn.textContent;
+          btn.textContent = "Kopiert ✓"; btn.classList.add("done");
+          setTimeout(function () { btn.textContent = old; btn.classList.remove("done"); }, 1400);
+        };
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(text).then(done, function () { fallbackCopy(text); done(); });
+        } else { fallbackCopy(text); done(); }
       });
     });
   })();
